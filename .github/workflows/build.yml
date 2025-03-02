@@ -1,0 +1,36 @@
+name: Build Pascal Project
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install Free Pascal
+        run: |
+          choco install fpc -y
+          fpc -iV  # Verify installation
+
+      - name: Compile Pascal Project
+        run: fpc -O2 -Mdelphi -o"output.exe" "source.pas"
+
+      - name: Upload Executable
+        uses: actions/upload-artifact@v3
+        with:
+          name: pascal-exe
+          path: output.exe
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: output.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
