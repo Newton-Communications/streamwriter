@@ -3,7 +3,7 @@ name: Build Pascal Project
 on:
   push:
     branches:
-      - main
+      - master
   pull_request:
 
 jobs:
